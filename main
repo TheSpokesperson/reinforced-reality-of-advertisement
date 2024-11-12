@@ -1,0 +1,266 @@
+import cv2
+import numpy as np
+import rembg
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+enter=0
+# Open the default camera
+cam = cv2.VideoCapture(0)
+from rembg import remove
+from PIL import Image
+# Get the default frame width and height
+frame_width = int(cam.get(cv2.CAP_PROP_FRAME_WIDTH))
+frame_height = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+
+# Define the codec and create VideoWriter object
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (1700, frame_height))
+count=0
+
+input_image = Image.open('img.png')
+
+# Convert the input image to a numpy array
+input_array = np.array(input_image)
+
+# Apply background removal using rembg
+output_array = rembg.remove(input_array)
+
+# Create a PIL Image from the output array
+output_image = Image.fromarray(output_array)
+t='Book A Plot, Now!'
+t1='Enter OK to Book!'
+k=0
+# Save the output image
+output_image.save('img.png')
+while True:
+    ret, frame = cam.read()
+    count+=1
+    if cv2.waitKey(1) == ord('q'):
+        break
+
+    # Write the frame to the output file
+
+    cv2.imwrite("sec_tem.jpg", frame)
+
+    cv2.imwrite("tem.jpg"  , frame)
+    img99=cv2.imread("tem.jpg")
+    #print(img99.shape)
+    w,h,kk=img99.shape
+    img = Image.open("tem.jpg")
+#img = img.crop((int(w/2)-10, int(h/2)-10, int(w/2)+10, int(h/2)+10))
+    img = img.crop((0, 410, 100, 480))
+    img.save("tem1s1.jpg")
+    img = Image.open("tem.jpg")
+    # img = img.crop((int(w/2)-10, int(h/2)-10, int(w/2)+10, int(h/2)+10))
+    img = img.crop((540, 410, 640, 480))
+    img.save("tem1s2.jpg")
+
+    img = Image.open("tem.jpg")
+    # img = img.crop((int(w/2)-10, int(h/2)-10, int(w/2)+10, int(h/2)+10))
+    img = img.crop((540, 0, 640, 100))
+    img.save("tem1s3.jpg")
+
+    img = Image.open("tem.jpg")
+    # img = img.crop((int(w/2)-10, int(h/2)-10, int(w/2)+10, int(h/2)+10))
+    img = img.crop((0, 0, 100, 100))
+    img.save("tem1s4.jpg")
+
+    def most_common_used_color(img):
+        # Get width and height of Image
+        width, height = img.size
+        # Initialize Variable
+        r_total = 0
+        g_total = 0
+        b_total = 0
+        count = 0
+        # Iterate through each pixel
+        for x in range(0, width):
+            for y in range(0, height):
+                # r,g,b value of pixel
+                r, g, b = img.getpixel((x, y))
+
+                r_total += r
+                g_total += g
+                b_total += b
+                count += 1
+
+        return (r_total / count, g_total / count, b_total / count)
+
+    # Read Image
+    img = Image.open(r'tem1s1.jpg')
+
+    # Convert Image into RGB
+    img = img.convert('RGB')
+
+    # call function
+    cc = most_common_used_color(img)
+
+    imgs2 = Image.open(r'tem1s2.jpg')
+
+    # Convert Image into RGB
+    imgs2 = imgs2.convert('RGB')
+
+    # call function
+    ccs2 = most_common_used_color(imgs2)
+
+    imgs2 = Image.open(r'tem1s3.jpg')
+
+    # Convert Image into RGB
+    imgs2 = imgs2.convert('RGB')
+
+    # call function
+    ccs3 = most_common_used_color(imgs2)
+    print(cc,ccs2,ccs3)
+    """imgs2 = Image.open(r'tem1s4.jpg')
+
+    # Convert Image into RGB
+    imgs2 = imgs2.convert('RGB')
+
+    # call function       # and int(ccs4[0]) > 130 and int(ccs4[0]) < 160 and int(ccs4[1]) > 140 and int(ccs4[1]) < 175 and int(ccs4[2]) > 150 and int(ccs4[2]) < 190 \
+    ccs4 = most_common_used_color(imgs2)"""
+
+    sec_bigImage = cv2.imread("sec_tem.jpg")
+
+
+    if  (int(cc[0])>65 and  int(cc[0])<135 and  int(cc[1])>65 and  int(cc[1])<115 and  int(cc[2])>55  and  int(cc[2])<105 )\
+        and (int(ccs3[0]) > 120 and int(ccs3[0]) < 200 and int(ccs3[1]) > 120 and int(ccs3[1]) < 200 and int(ccs3[2]) > 120 and int(ccs3[2]) < 200) \
+            and (int(ccs2[0])>77 and  int(ccs2[0])<145 and  int(ccs2[1])>65 and  int(ccs2[1])<130 and  int(ccs2[2])>40  and  int(ccs2[2])<115):
+        image = cv2.imread('tem.jpg')
+        brightness = 8
+        print(enter)
+        # Adjusts the contrast by scaling the pixel values by 2.3
+        contrast = 1.5
+        image2 = cv2.addWeighted(image, contrast, np.zeros(image.shape, image.dtype), 0, brightness)
+
+        # Save the image
+        cv2.imwrite('tem.jpg', image2)
+
+        # I don't have a webcam connected, so it's your frame
+        """ opacity_level = 40  # Opaque is 255, input between 0-255
+
+        img = Image.open('img.png')
+        img = img.convert("RGBA")
+        datas = img.getdata()
+
+        newData = []
+        for item in datas:
+            if item[0] > 0 and item[1] > 0 and item[2] > 0:
+                newData.append((item[0] , item[1] , item[2] , opacity_level))
+            else:
+                newData.append(item)
+
+        img.putdata(newData)
+        img.save("img.png", "PNG")"""
+        if enter==0 :
+            if count%3==0:
+                k+=1
+            if len(t)==k:
+                k=0
+            img = Image.open("tem.jpg")
+            draw = ImageDraw.Draw(img)
+            # font = ImageFont.truetype(<font-file>, <font-size>)
+            font = ImageFont.truetype("arial.ttf", 50)
+
+            # draw.text((x, y),"Sample Text",(r,g,b))
+            draw.text((130, 60), t[:k], (	139, 0, 0), font=font)
+            img.save("tem.jpg")
+            im = Image.open('gif/frame'+str(count%100)+'.png')
+            #print('gif/frame' + str(count%100) + '.png')
+            im.thumbnail((420, 420), Image.Resampling.LANCZOS)
+            im.save('img.png', "PNG")
+
+            im11 = Image.open('gif11/frame' + str(count % 57) + '.png')
+            #print('gif11/frame' + str(count % 57) + '.png')
+            im11.thumbnail((260, 260), Image.Resampling.LANCZOS)
+            im11.save('img11.png', "PNG")
+
+            im22 = Image.open('gif22/frame' + str(count % 85) + '.png')
+            #print('gif22/frame' + str(count % 57) + '.png')
+            im22.thumbnail((395, 395), Image.Resampling.LANCZOS)
+            im22.save('img22.png', "PNG")
+
+            img1 = Image.open(r"tem.jpg").convert("RGB")
+
+            img2 = Image.open(r"img.png").convert("RGBA")
+
+            img1.paste(img2, (-80, 100), mask=img2)
+            img1.save('tem.jpg')
+            img1 = Image.open(r"tem.jpg").convert("RGB")
+
+            # Opening the secondary image (overlay image)
+            img2 = Image.open(r"img11.png").convert("RGBA")
+            img1.paste(img2, (440, 170), mask=img2)
+            img1.save('tem.jpg')
+
+        else:
+            img1 = Image.open(r"tem.jpg").convert("RGB")
+            im22 = Image.open('gif22/frame' + str(count % 85) + '.png')
+            # print('gif22/frame' + str(count % 57) + '.png')
+            im22.thumbnail((450, 395), Image.Resampling.LANCZOS)
+            im22.save('img33.png', "PNG")
+            img2 = Image.open(r"img33.png").convert("RGBA")
+            img1.paste(img2, (100, -10), mask=img2)
+            img1.save('tem.jpg')
+
+            im22 = Image.open('gif33/frame' + str(count % 29) + '.png')
+            # print('gif22/frame' + str(count % 57) + '.png')
+            im22.thumbnail((450, 395), Image.Resampling.LANCZOS)
+            im22.save('img33.png', "PNG")
+
+
+            img1 = Image.open(r"tem.jpg").convert("RGB")
+            img2 = Image.open(r"img33.png").convert("RGBA")
+            img1.paste(img2, (70, 100), mask=img2)
+            img1.paste(img2, (450, 100), mask=img2)
+            img1.save('tem.jpg')
+
+
+        """img2 = Image.open(r"img22.png").convert("RGBA")
+        img1.paste(img2, (145, 95), mask=img2)
+        img1.save('tem.jpg')"""
+        im = Image.open("tem.jpg")
+        im = im.resize((1000,800))
+        im.save('tem.jpg')
+        bigImage = cv2.imread("tem.jpg")
+
+        """smallImage = cv2.imread("img.png")  # 50x50 for you
+        height1, width1, channels1 = bigImage.shape
+        height, width, channels = smallImage.shape
+        if count%5==0:
+            offset = np.array(
+            (int(height1/2), int(width1/2)-50))
+        else:
+            offset = np.array(
+                (int(height1 / 2), int(width1 / 2) - 50))
+
+        bigImage[offset[0]:offset[0] + height, offset[1]:offset[1] + width] = smallImage"""
+
+
+
+        """    gray_image = cv2.cvtColor(bigImage, cv2.COLOR_BGR2GRAY)
+
+    maxValue = 255
+    thresh = 240
+    retval, dst = cv2.threshold(bigImage, thresh, maxValue, cv2.THRESH_BINARY_INV)"""
+    im = Image.open("tem.jpg")
+    im = im.resize((1000, 800))
+    im.save('tem.jpg')
+    # print(cc,ccs2,ccs3,ccs4)
+    bigImage = cv2.imread("tem.jpg")
+    cv2.imshow('Camera', bigImage)
+    cv2.imshow('sec_Camera', sec_bigImage)
+    # Press 'q' to exit the loop
+
+
+    if cv2.waitKey(1) == ord('o'):
+        if enter==0: enter=1
+        else: enter=0
+
+
+
+# Release the capture and writer objects
+cam.release()
+out.release()
+cv2.destroyAllWindows()
